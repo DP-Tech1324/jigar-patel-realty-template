@@ -1,25 +1,24 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Phone, Mail, User } from "lucide-react";
+import { Menu, X, Phone, Mail, User, ChevronDown } from "lucide-react";
 import { useAuth } from '@/components/auth/AuthContext';
 import AuthModal from '@/components/auth/AuthModal';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
   const { user, signOut, loading } = useAuth();
-
-  const navigation = [
-    { name: "Home", href: "#" },
-    { name: "About", href: "#about" },
-    { name: "Listings", href: "#listings" },
-    { name: "Buyers", href: "#buyers" },
-    { name: "Sellers", href: "#sellers" },
-    { name: "Calculator", href: "#calculator" },
-    { name: "Contact", href: "#contact" },
-  ];
 
   const handleAuthClick = (mode: 'signin' | 'signup') => {
     setAuthMode(mode);
@@ -63,7 +62,7 @@ const Header = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <div className="flex-shrink-0 flex items-center">
+              <Link to="/" className="flex items-center">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center mr-3">
                   <span className="text-white font-bold text-lg">JP</span>
                 </div>
@@ -71,22 +70,172 @@ const Header = () => {
                   <h1 className="text-xl font-bold text-blue-900">Jigar Patel</h1>
                   <p className="text-sm text-gray-600">Real Estate</p>
                 </div>
-              </div>
+              </Link>
             </div>
 
             {/* Desktop navigation */}
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
+              <NavigationMenu>
+                <NavigationMenuList className="flex items-center space-x-1">
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link to="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Home
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <a href="#about" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        About
+                      </a>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <a href="#listings" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Listings
+                      </a>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                      Buyers
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid w-[400px] gap-3 p-4">
+                        <NavigationMenuLink asChild>
+                          <Link to="/buyers" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Buyers Guide</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Complete guide for home buyers in the GTA
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/buyers/financing-options" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Financing Options</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Explore mortgage and financing solutions
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/buyers/first-time-guide" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">First-Time Buyers</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Step-by-step guide for first-time home buyers
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/buyers/home-buying-process" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Home Buying Process</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Understanding the complete buying process
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                      Sellers
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid w-[400px] gap-3 p-4">
+                        <NavigationMenuLink asChild>
+                          <Link to="/sellers" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Sellers Guide</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Complete guide for selling your home
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/sellers/valuation" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Home Valuation</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Get an accurate estimate of your home's value
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/sellers/marketing-strategy" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Marketing Strategy</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Strategic marketing to sell your home fast
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/sellers/staging-tips" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Staging Tips</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Professional tips to stage your home
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                      Calculators
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid w-[400px] gap-3 p-4">
+                        <NavigationMenuLink asChild>
+                          <Link to="/calculators" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">All Calculators</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Financial tools for real estate decisions
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/calculators/mortgage" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Mortgage Calculator</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Calculate monthly mortgage payments
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/calculators/land-transfer-tax" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Land Transfer Tax</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Calculate Ontario land transfer tax
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/calculators/affordability" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Affordability Calculator</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Determine how much home you can afford
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <a href="#contact" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Contact
+                      </a>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </div>
 
             {/* Auth buttons */}
@@ -142,16 +291,86 @@ const Header = () => {
           {isMenuOpen && (
             <div className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                ))}
+                <Link
+                  to="/"
+                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <a
+                  href="#about"
+                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  About
+                </a>
+                <a
+                  href="#listings"
+                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Listings
+                </a>
+                
+                {/* Mobile Buyers submenu */}
+                <div className="space-y-1">
+                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Buyers</div>
+                  <Link to="/buyers" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Buyers Guide
+                  </Link>
+                  <Link to="/buyers/financing-options" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Financing Options
+                  </Link>
+                  <Link to="/buyers/first-time-guide" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    First-Time Buyers
+                  </Link>
+                  <Link to="/buyers/home-buying-process" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Home Buying Process
+                  </Link>
+                </div>
+
+                {/* Mobile Sellers submenu */}
+                <div className="space-y-1">
+                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Sellers</div>
+                  <Link to="/sellers" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Sellers Guide
+                  </Link>
+                  <Link to="/sellers/valuation" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Home Valuation
+                  </Link>
+                  <Link to="/sellers/marketing-strategy" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Marketing Strategy
+                  </Link>
+                  <Link to="/sellers/staging-tips" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Staging Tips
+                  </Link>
+                </div>
+
+                {/* Mobile Calculators submenu */}
+                <div className="space-y-1">
+                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Calculators</div>
+                  <Link to="/calculators" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    All Calculators
+                  </Link>
+                  <Link to="/calculators/mortgage" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Mortgage Calculator
+                  </Link>
+                  <Link to="/calculators/land-transfer-tax" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Land Transfer Tax
+                  </Link>
+                  <Link to="/calculators/affordability" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Affordability Calculator
+                  </Link>
+                </div>
+
+                <a
+                  href="#contact"
+                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contact
+                </a>
                 
                 {/* Mobile auth buttons */}
                 <div className="pt-4 space-y-2">

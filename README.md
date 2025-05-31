@@ -1,73 +1,180 @@
-# Welcome to your Lovable project
 
-## Project info
+# Jigar Patel Real Estate Website
 
-**URL**: https://lovable.dev/projects/e4ace85e-5c75-4b3c-80b0-03bf39f26631
+A modern, responsive real estate website built for Jigar Patel, featuring property listings, client testimonials, and comprehensive real estate services in the Greater Toronto Area.
 
-## How can I edit this code?
+## 🚀 Features
 
-There are several ways of editing your application.
+- **Responsive Design**: Fully optimized for desktop, tablet, and mobile devices
+- **Modern UI**: Clean, professional design with smooth animations and interactions
+- **Property Listings**: Featured properties carousel with detailed information
+- **Search Functionality**: Advanced property search with filters
+- **Agent Bio**: Comprehensive about section with achievements and credentials
+- **Client Testimonials**: Rotating testimonials carousel
+- **Dual CTA Sections**: Property search and home valuation tools
+- **Contact Integration**: Multiple contact methods and consultation booking
+- **SEO Optimized**: Built with best practices for search engine optimization
 
-**Use Lovable**
+## 🛠 Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e4ace85e-5c75-4b3c-80b0-03bf39f26631) and start prompting.
+- **Frontend**: React 18 + TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Shadcn/ui
+- **Icons**: Lucide React
+- **Build Tool**: Vite
+- **Router**: React Router DOM
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📁 Project Structure
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/
+│   ├── Header.tsx          # Navigation and branding
+│   ├── Hero.tsx           # Main hero section with CTA
+│   ├── PropertySearch.tsx  # Advanced property search form
+│   ├── FeaturedListings.tsx # Property listings carousel
+│   ├── DualCTA.tsx        # Search and valuation panels
+│   ├── BioSection.tsx     # Agent biography and achievements
+│   ├── Testimonials.tsx   # Client testimonials carousel
+│   └── Footer.tsx         # Contact info and social links
+├── pages/
+│   ├── Index.tsx          # Main homepage
+│   └── NotFound.tsx       # 404 error page
+└── hooks/
+    └── use-toast.ts       # Toast notification hook
 ```
 
-**Edit a file directly in GitHub**
+## 🎨 Design Features
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Color Scheme
+- **Primary**: Blue (#1E40AF, #2563EB, #3B82F6)
+- **Secondary**: White (#FFFFFF)
+- **Accent**: Gold/Yellow (#EAB308, #F59E0B)
+- **Background**: Light blue gradients (#EFF6FF, #DBEAFE)
 
-**Use GitHub Codespaces**
+### Key Components
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Header**: Sticky navigation with contact info and responsive mobile menu
+2. **Hero Section**: Eye-catching banner with property search integration
+3. **Featured Listings**: Rotating showcase of premium properties
+4. **Dual CTA Panels**: Search and valuation tools with unique icons
+5. **Bio Section**: Professional profile with statistics and achievements
+6. **Testimonials**: Client reviews with star ratings and navigation
+7. **Footer**: Comprehensive contact information and social links
 
-## What technologies are used for this project?
+## 🔧 Setup & Installation
 
-This project is built with:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd jigar-patel-real-estate
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## How can I deploy this project?
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/e4ace85e-5c75-4b3c-80b0-03bf39f26631) and click on Share -> Publish.
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-## Can I connect a custom domain to my Lovable project?
+## 📝 Customization Guide
 
-Yes, you can!
+### Content Updates
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. **Contact Information**: Update phone, email, and address in `Header.tsx` and `Footer.tsx`
+2. **Bio Content**: Modify agent description and achievements in `BioSection.tsx`
+3. **Testimonials**: Replace sample testimonials in `Testimonials.tsx`
+4. **Property Listings**: Update mock data in `FeaturedListings.tsx` or connect to Supabase
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Image Replacements
+
+1. **Agent Photo**: Replace placeholder in `BioSection.tsx` with professional headshot
+2. **Property Images**: Update listing images in `FeaturedListings.tsx`
+3. **Logo**: Update "JP" monogram in header with custom logo
+4. **Hero Background**: Replace hero section background image
+
+### Brand Colors
+
+Update brand colors in `tailwind.config.ts` or component files:
+- Primary blue: `blue-600`, `blue-700`, `blue-800`, `blue-900`
+- Accent yellow: `yellow-400`, `yellow-500`, `yellow-600`
+
+### Navigation Menu
+
+Modify navigation items in `Header.tsx`:
+```typescript
+const navigation = [
+  { name: "Home", href: "#" },
+  { name: "About", href: "#about" },
+  // Add or remove menu items
+];
+```
+
+## 🔌 Supabase Integration
+
+To connect property listings to Supabase:
+
+1. **Click the Supabase button** in the top right of Lovable
+2. **Connect your Supabase project**
+3. **Update FeaturedListings.tsx** to fetch from your database
+4. **Create listings table** with fields: id, image, price, address, beds, baths, sqft, type
+
+Example table structure:
+```sql
+CREATE TABLE listings (
+  id SERIAL PRIMARY KEY,
+  image TEXT,
+  price TEXT,
+  address TEXT,
+  beds INTEGER,
+  baths INTEGER,
+  sqft TEXT,
+  type TEXT,
+  featured BOOLEAN DEFAULT false
+);
+```
+
+## 📱 Mobile Optimization
+
+- Responsive grid layouts that adapt to screen size
+- Touch-friendly buttons and navigation
+- Optimized image loading and sizing
+- Hamburger menu for mobile navigation
+- Swipe-friendly carousels and sliders
+
+## 🔍 SEO Features
+
+- Semantic HTML structure
+- Meta tags for social sharing
+- Optimized images with alt text
+- Fast loading times with Vite
+- Clean URLs and navigation structure
+
+## 📞 Contact & Support
+
+For customizations, additional features, or technical support, contact the development team through the Lovable platform.
+
+## 📋 Site Map
+
+- **Home** (`/`): Main landing page with all sections
+- **About** (`#about`): Agent biography and credentials
+- **Listings** (`#listings`): Featured property listings
+- **Contact** (`#contact`): Contact information and forms
+
+## 🚀 Deployment
+
+The site is optimized for deployment on:
+- Vercel
+- Netlify
+- GitHub Pages
+- Any static hosting provider
+
+Built files are generated in the `dist/` directory after running `npm run build`.

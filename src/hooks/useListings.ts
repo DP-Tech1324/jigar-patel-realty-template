@@ -12,7 +12,7 @@ export interface Listing {
   province: string;
   postal_code?: string;
   price?: number;
-  property_type: string;
+  property_type: 'single_family' | 'condo' | 'townhouse' | 'multi_family' | 'land' | 'commercial';
   bedrooms?: number;
   bathrooms?: number;
   square_footage?: number;
@@ -31,7 +31,7 @@ export interface Listing {
 
 export interface SearchFilters {
   city?: string;
-  propertyType?: string;
+  propertyType?: 'single_family' | 'condo' | 'townhouse' | 'multi_family' | 'land' | 'commercial';
   minPrice?: number;
   maxPrice?: number;
   bedrooms?: number;

@@ -1,9 +1,24 @@
-
 import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Phone, Mail, User, ChevronDown } from "lucide-react";
-import { useAuth } from '@/components/auth/AuthContext';
-import AuthModal from '@/components/auth/AuthModal';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { 
+  Menu, 
+  Phone, 
+  Mail, 
+  Home, 
+  Search, 
+  Calculator, 
+  Users, 
+  TrendingUp,
+  FileText,
+  HelpCircle,
+  Bookmark,
+  User,
+  LogOut,
+  ChevronDown
+} from "lucide-react";
+import { useAuth } from "@/components/auth/AuthContext";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,415 +27,316 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
-  const { user, signOut, loading } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleAuthClick = (mode: 'signin' | 'signup') => {
-    setAuthMode(mode);
-    setIsAuthModalOpen(true);
+  const navigationItems = [
+    {
+      title: "Properties",
+      items: [
+        { title: "Search Properties", href: "/search", description: "Find your perfect home", icon: Search },
+        { title: "Featured Listings", href: "/#listings", description: "Handpicked premium properties", icon: TrendingUp },
+        { title: "Saved Properties", href: "/favorites", description: "Your favorite listings", icon: Bookmark, requiresAuth: true },
+      ]
+    },
+    {
+      title: "Buyers",
+      items: [
+        { title: "Buyers Guide", href: "/buyers", description: "Complete buying guide", icon: Users },
+        { title: "Financing Options", href: "/buyers/financing-options", description: "Mortgage and financing info", icon: Calculator },
+        { title: "First-Time Buyers", href: "/buyers/first-time-guide", description: "Guide for first-time buyers", icon: Home },
+        { title: "Buying Process", href: "/buyers/home-buying-process", description: "Step-by-step process", icon: FileText },
+      ]
+    },
+    {
+      title: "Sellers",
+      items: [
+        { title: "Sellers Guide", href: "/sellers", description: "Complete selling guide", icon: TrendingUp },
+        { title: "Home Valuation", href: "/sellers/valuation", description: "Get your home's value", icon: Calculator },
+        { title: "Marketing Strategy", href: "/sellers/marketing-strategy", description: "How we market your home", icon: Users },
+        { title: "Staging Tips", href: "/sellers/staging-tips", description: "Prepare your home for sale", icon: Home },
+      ]
+    },
+    {
+      title: "Resources",
+      items: [
+        { title: "Calculators", href: "/calculators", description: "Financial calculators", icon: Calculator },
+        { title: "Blog & Articles", href: "/blog", description: "Market insights and tips", icon: FileText },
+        { title: "FAQ", href: "/faq", description: "Frequently asked questions", icon: HelpCircle },
+      ]
+    }
+  ];
+
+  const isActivePath = (path: string) => {
+    if (path === "/#listings") return false;
+    return location.pathname === path || location.pathname.startsWith(path + "/");
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      // Error handled in auth context
+  const handleNavigation = (href: string) => {
+    if (href.startsWith("/#")) {
+      navigate("/");
+      setTimeout(() => {
+        const element = document.querySelector(href.substring(1));
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      navigate(href);
     }
+    setIsMobileMenuOpen(false);
+  };
+
+  const ListItem = ({ className, title, children, href, icon: Icon, ...props }: any) => {
+    return (
+      <li>
+        <NavigationMenuLink asChild>
+          <button
+            onClick={() => handleNavigation(href)}
+            className={cn(
+              "group block select-none space-y-1 rounded-xl p-4 leading-none no-underline outline-none transition-colors hover:bg-slate-50 hover:text-slate-900 focus:bg-slate-50 focus:text-slate-900 w-full text-left",
+              className
+            )}
+            {...props}
+          >
+            <div className="flex items-center space-x-3">
+              {Icon && <Icon className="h-5 w-5 text-blue-600 group-hover:text-blue-700" />}
+              <div>
+                <div className="text-sm font-semibold leading-none text-slate-900">{title}</div>
+                <p className="line-clamp-2 text-sm leading-snug text-slate-600 mt-1">
+                  {children}
+                </p>
+              </div>
+            </div>
+          </button>
+        </NavigationMenuLink>
+      </li>
+    )
   };
 
   return (
-    <>
-      <header className="bg-white shadow-lg sticky top-0 z-50">
-        {/* Top bar */}
-        <div className="bg-blue-900 text-white py-2">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center text-sm">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center">
-                  <Phone className="h-4 w-4 mr-1" />
-                  <span>(416) 555-0123</span>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="h-4 w-4 mr-1" />
-                  <span>jigar@jigarpatelrealestate.com</span>
-                </div>
-              </div>
-              <div className="hidden md:block">
-                <span>Your Trusted GTA Realtor</span>
-              </div>
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      {/* Top bar */}
+      <div className="bg-slate-900 text-white py-2 px-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <Phone className="h-4 w-4" />
+              <span>(416) 555-0123</span>
             </div>
+            <div className="hidden md:flex items-center space-x-2">
+              <Mail className="h-4 w-4" />
+              <span>jigar@jigarpatelrealestate.com</span>
+            </div>
+          </div>
+          <div className="text-yellow-400 font-semibold">
+            Free Consultation Available
           </div>
         </div>
+      </div>
 
-        {/* Main navigation */}
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center mr-3">
-                  <span className="text-white font-bold text-lg">JP</span>
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-blue-900">Jigar Patel</h1>
-                  <p className="text-sm text-gray-600">Real Estate</p>
-                </div>
-              </Link>
+      {/* Main header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+              <span className="text-white font-bold text-xl">JP</span>
             </div>
-
-            {/* Desktop navigation */}
-            <div className="hidden md:block">
-              <NavigationMenu>
-                <NavigationMenuList className="flex items-center space-x-1">
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <Link to="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        Home
-                      </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                      Properties
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid w-[400px] gap-3 p-4">
-                        <NavigationMenuLink asChild>
-                          <Link to="/search" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Search Properties</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Browse all available properties with advanced filters
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/#listings" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Featured Listings</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Handpicked premium properties
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/favorites" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Saved Properties</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              View your favorite saved listings
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                      Buyers
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid w-[400px] gap-3 p-4">
-                        <NavigationMenuLink asChild>
-                          <Link to="/buyers" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Buyers Guide</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Complete guide for home buyers in the GTA
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/buyers/financing-options" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Financing Options</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Explore mortgage and financing solutions
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/buyers/first-time-guide" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">First-Time Buyers</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Step-by-step guide for first-time home buyers
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/buyers/home-buying-process" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Home Buying Process</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Understanding the complete buying process
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                      Sellers
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid w-[400px] gap-3 p-4">
-                        <NavigationMenuLink asChild>
-                          <Link to="/sellers" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Sellers Guide</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Complete guide for selling your home
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/sellers/valuation" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Home Valuation</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Get an accurate estimate of your home's value
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/sellers/marketing-strategy" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Marketing Strategy</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Strategic marketing to sell your home fast
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/sellers/staging-tips" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Staging Tips</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Professional tips to stage your home
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                      Resources
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid w-[400px] gap-3 p-4">
-                        <NavigationMenuLink asChild>
-                          <Link to="/calculators" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Calculators</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Mortgage, affordability, and tax calculators
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/blog" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Blog & Resources</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Latest market insights and expert advice
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/faq" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">FAQ</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Frequently asked questions
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <a href="#contact" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        Contact
-                      </a>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
+            <div className="hidden sm:block">
+              <div className="text-xl font-bold text-slate-900">Jigar Patel</div>
+              <div className="text-sm text-blue-600 font-semibold">Real Estate</div>
             </div>
+          </Link>
 
-            {/* Auth buttons */}
-            <div className="hidden md:flex items-center space-x-4">
-              {loading ? (
-                <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
-              ) : user ? (
-                <div className="flex items-center space-x-3">
-                  <span className="text-sm text-gray-600">
-                    Welcome, {user.user_metadata?.first_name || user.email}
-                  </span>
+          {/* Desktop Navigation */}
+          <div className="hidden lg:block">
+            <NavigationMenu>
+              <NavigationMenuList className="space-x-2">
+                {navigationItems.map((section) => (
+                  <NavigationMenuItem key={section.title}>
+                    <NavigationMenuTrigger 
+                      className={cn(
+                        "h-12 px-6 text-base font-medium bg-transparent hover:bg-slate-50 data-[state=open]:bg-slate-50 transition-all duration-200",
+                        section.items.some(item => isActivePath(item.href)) && "text-blue-600 bg-blue-50"
+                      )}
+                    >
+                      {section.title}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[400px] gap-2 p-6 md:w-[500px] md:grid-cols-1 lg:w-[600px]">
+                        {section.items.map((item) => (
+                          (!item.requiresAuth || user) && (
+                            <ListItem
+                              key={item.title}
+                              title={item.title}
+                              href={item.href}
+                              icon={item.icon}
+                            >
+                              {item.description}
+                            </ListItem>
+                          )
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                ))}
+                
+                <NavigationMenuItem>
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSignOut}
+                    onClick={() => navigate('/contact')}
+                    className="h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold ml-4"
                   >
-                    Sign Out
+                    Contact
                   </Button>
-                </div>
-              ) : (
-                <>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleAuthClick('signin')}
-                  >
-                    <User className="h-4 w-4 mr-2" />
-                    Sign In
-                  </Button>
-                  <Button
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
-                    size="sm"
-                    onClick={() => handleAuthClick('signup')}
-                  >
-                    Sign Up
-                  </Button>
-                </>
-              )}
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 hover:text-blue-600"
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
 
-          {/* Mobile menu */}
-          {isMenuOpen && (
-            <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-                <Link
-                  to="/"
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+          {/* User Menu & Mobile Menu */}
+          <div className="flex items-center space-x-4">
+            {/* User menu for desktop */}
+            {user && (
+              <div className="hidden lg:flex items-center space-x-4">
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/favorites')}
+                  className="flex items-center space-x-2"
                 >
-                  Home
-                </Link>
-                
-                {/* Mobile Properties submenu */}
-                <div className="space-y-1">
-                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Properties</div>
-                  <Link to="/search" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Search Properties
-                  </Link>
-                  <Link to="/favorites" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Saved Properties
-                  </Link>
-                </div>
-
-                {/* Mobile Buyers submenu */}
-                <div className="space-y-1">
-                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Buyers</div>
-                  <Link to="/buyers" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Buyers Guide
-                  </Link>
-                  <Link to="/buyers/financing-options" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Financing Options
-                  </Link>
-                  <Link to="/buyers/first-time-guide" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    First-Time Buyers
-                  </Link>
-                  <Link to="/buyers/home-buying-process" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Home Buying Process
-                  </Link>
-                </div>
-
-                {/* Mobile Sellers submenu */}
-                <div className="space-y-1">
-                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Sellers</div>
-                  <Link to="/sellers" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Sellers Guide
-                  </Link>
-                  <Link to="/sellers/valuation" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Home Valuation
-                  </Link>
-                  <Link to="/sellers/marketing-strategy" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Marketing Strategy
-                  </Link>
-                  <Link to="/sellers/staging-tips" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Staging Tips
-                  </Link>
-                </div>
-
-                {/* Mobile Resources submenu */}
-                <div className="space-y-1">
-                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Resources</div>
-                  <Link to="/calculators" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Calculators
-                  </Link>
-                  <Link to="/blog" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Blog & Resources
-                  </Link>
-                  <Link to="/faq" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    FAQ
-                  </Link>
-                </div>
-
-                <a
-                  href="#contact"
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+                  <Bookmark className="h-4 w-4" />
+                  <span>Saved</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={logout}
+                  className="flex items-center space-x-2"
                 >
-                  Contact
-                </a>
-                
-                {/* Mobile auth buttons */}
-                <div className="pt-4 space-y-2">
-                  {user ? (
-                    <>
-                      <div className="px-3 py-2 text-sm text-gray-600">
-                        Welcome, {user.user_metadata?.first_name || user.email}
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={handleSignOut}
-                      >
-                        Sign Out
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => handleAuthClick('signin')}
-                      >
-                        Sign In
-                      </Button>
-                      <Button
-                        className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold w-full"
-                        onClick={() => handleAuthClick('signup')}
-                      >
-                        Sign Up
-                      </Button>
-                    </>
-                  )}
-                </div>
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
               </div>
-            </div>
-          )}
-        </nav>
-      </header>
+            )}
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        defaultMode={authMode}
-      />
-    </>
+            {/* Mobile menu */}
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="lg:hidden">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="p-6 border-b border-slate-200">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold">JP</span>
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900">Jigar Patel</div>
+                        <div className="text-sm text-blue-600">Real Estate</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Navigation */}
+                  <div className="flex-1 overflow-y-auto p-6">
+                    <nav className="space-y-6">
+                      {navigationItems.map((section) => (
+                        <div key={section.title}>
+                          <h3 className="font-semibold text-slate-900 mb-3 text-lg">{section.title}</h3>
+                          <div className="space-y-2 ml-4">
+                            {section.items.map((item) => (
+                              (!item.requiresAuth || user) && (
+                                <button
+                                  key={item.title}
+                                  onClick={() => handleNavigation(item.href)}
+                                  className={cn(
+                                    "flex items-center space-x-3 w-full p-3 rounded-lg text-left transition-colors",
+                                    isActivePath(item.href) 
+                                      ? "bg-blue-50 text-blue-700" 
+                                      : "hover:bg-slate-50 text-slate-700"
+                                  )}
+                                >
+                                  <item.icon className="h-5 w-5" />
+                                  <div>
+                                    <div className="font-medium">{item.title}</div>
+                                    <div className="text-sm text-slate-500">{item.description}</div>
+                                  </div>
+                                </button>
+                              )
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </nav>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="p-6 border-t border-slate-200 space-y-4">
+                    {user ? (
+                      <div className="space-y-2">
+                        <Button
+                          onClick={() => {
+                            navigate('/favorites');
+                            setIsMobileMenuOpen(false);
+                          }}
+                          variant="outline"
+                          className="w-full justify-start"
+                        >
+                          <Bookmark className="h-4 w-4 mr-2" />
+                          Saved Properties
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            logout();
+                            setIsMobileMenuOpen(false);
+                          }}
+                          variant="outline"
+                          className="w-full justify-start"
+                        >
+                          <LogOut className="h-4 w-4 mr-2" />
+                          Logout
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Button
+                          onClick={() => {
+                            // TODO: Open auth modal
+                            setIsMobileMenuOpen(false);
+                          }}
+                          variant="outline"
+                          className="w-full justify-start"
+                        >
+                          <User className="h-4 w-4 mr-2" />
+                          Sign In
+                        </Button>
+                      </div>
+                    )}
+                    <Button
+                      onClick={() => {
+                        navigate('/contact');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                    >
+                      Contact Jigar
+                    </Button>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+      </div>
+    </header>
   );
 };
 

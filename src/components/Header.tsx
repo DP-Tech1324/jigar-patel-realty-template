@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -214,7 +214,7 @@ const Header = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={logout}
+                  onClick={signOut}
                   className="flex items-center space-x-2"
                 >
                   <LogOut className="h-4 w-4" />
@@ -295,7 +295,7 @@ const Header = () => {
                         </Button>
                         <Button
                           onClick={() => {
-                            logout();
+                            signOut();
                             setIsMobileMenuOpen(false);
                           }}
                           variant="outline"

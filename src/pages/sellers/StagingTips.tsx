@@ -314,12 +314,12 @@ const StagingTips = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <a href="#contact">
+              <a href="/contact">
                 Get Staging Consultation
               </a>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-purple-600">
-              <a href="#contact">
+              <a href="/contact">
                 Contact Jigar Patel
               </a>
             </Button>

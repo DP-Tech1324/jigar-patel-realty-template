@@ -193,7 +193,7 @@ const HomeValuation = () => {
             Contact Jigar Patel today for a comprehensive, professional home valuation and market analysis.
           </p>
           <Button asChild size="lg" variant="secondary">
-            <a href="#contact">
+            <a href="/contact">
               Contact Jigar Patel
             </a>
           </Button>

@@ -199,7 +199,7 @@ const MarketingStrategy = () => {
             Get a personalized marketing strategy that will showcase your home to thousands of qualified buyers.
           </p>
           <Button asChild size="lg" variant="secondary">
-            <a href="#contact">
+            <a href="/contact">
               Get Your Marketing Plan
             </a>
           </Button>

@@ -58,7 +58,7 @@ const Buyers = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg">
-                  <a href="#contact">
+                  <a href="/contact">
                     Start Your Search
                   </a>
                 </Button>
@@ -81,7 +81,7 @@ const Buyers = () => {
                   Get personalized assistance from a trusted GTA realtor with years of experience.
                 </p>
                 <Button asChild className="w-full">
-                  <a href="#contact">
+                  <a href="/contact">
                     Contact Jigar Patel
                   </a>
                 </Button>

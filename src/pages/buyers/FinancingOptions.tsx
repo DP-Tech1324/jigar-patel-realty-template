@@ -267,7 +267,7 @@ const FinancingOptions = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <a href="#contact">
+              <a href="/contact">
                 Contact Jigar Patel
               </a>
             </Button>

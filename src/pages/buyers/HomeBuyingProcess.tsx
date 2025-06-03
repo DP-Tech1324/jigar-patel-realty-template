@@ -328,7 +328,7 @@ const HomeBuyingProcess = () => {
             Start with a consultation to understand your needs and create a personalized home buying strategy.
           </p>
           <Button asChild size="lg" variant="secondary">
-            <a href="#contact">
+            <a href="/contact">
               Schedule Your Consultation
             </a>
           </Button>

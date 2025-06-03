@@ -264,7 +264,7 @@ const FirstTimeGuide = () => {
             Get personalized advice and expert support from start to finish.
           </p>
           <Button asChild size="lg" variant="secondary">
-            <a href="#contact">
+            <a href="/contact">
               Start Working with Jigar Patel
             </a>
           </Button>

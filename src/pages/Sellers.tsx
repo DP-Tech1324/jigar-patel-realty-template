@@ -81,7 +81,7 @@ const Sellers = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg">
-                  <a href="#contact">
+                  <a href="/contact">
                     Get Free Home Valuation
                   </a>
                 </Button>
@@ -104,7 +104,7 @@ const Sellers = () => {
                   Get a personalized marketing plan and competitive market analysis for your property.
                 </p>
                 <Button asChild className="w-full">
-                  <a href="#contact">
+                  <a href="/contact">
                     Contact Jigar Patel Today
                   </a>
                 </Button>
@@ -286,7 +286,7 @@ const Sellers = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <a href="#contact">
+              <a href="/contact">
                 Get Free Home Valuation
               </a>
             </Button>

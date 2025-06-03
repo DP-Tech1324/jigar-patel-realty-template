@@ -5,10 +5,12 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useFeaturedListings } from "@/hooks/useListings";
 import PropertyCard from "./PropertyCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useNavigate } from "react-router-dom";
 
 const FeaturedListings = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { data: listings, isLoading, error } = useFeaturedListings();
+  const navigate = useNavigate();
 
   const nextSlide = () => {
     if (listings) {
@@ -23,8 +25,7 @@ const FeaturedListings = () => {
   };
 
   const handleViewDetails = (id: string) => {
-    // TODO: Navigate to property details page
-    console.log('View details for listing:', id);
+    navigate(`/property/${id}`);
   };
 
   if (error) {
@@ -104,7 +105,12 @@ const FeaturedListings = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
+          <Button 
+            size="lg" 
+            variant="outline" 
+            className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+            onClick={() => navigate('/search')}
+          >
             View All Listings
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>

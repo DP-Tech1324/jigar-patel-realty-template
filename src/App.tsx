@@ -26,6 +26,14 @@ import HomeValuation from "./pages/sellers/HomeValuation";
 import MarketingStrategy from "./pages/sellers/MarketingStrategy";
 import StagingTips from "./pages/sellers/StagingTips";
 
+// New Pages
+import PropertyDetails from "./pages/PropertyDetails";
+import PropertySearch from "./pages/PropertySearch";
+import FAQ from "./pages/FAQ";
+import Blog from "./pages/Blog";
+import Favorites from "./pages/Favorites";
+import AdminDashboard from "./pages/AdminDashboard";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -37,6 +45,18 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            
+            {/* Property Pages */}
+            <Route path="/property/:id" element={<PropertyDetails />} />
+            <Route path="/search" element={<PropertySearch />} />
+            <Route path="/favorites" element={<Favorites />} />
+            
+            {/* Information Pages */}
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/blog" element={<Blog />} />
+            
+            {/* Admin */}
+            <Route path="/admin" element={<AdminDashboard />} />
             
             {/* Calculators Routes */}
             <Route path="/calculators" element={<Calculators />} />

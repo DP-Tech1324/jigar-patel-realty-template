@@ -86,19 +86,37 @@ const Header = () => {
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <a href="#about" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        About
-                      </a>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <a href="#listings" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        Listings
-                      </a>
-                    </NavigationMenuLink>
+                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                      Properties
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid w-[400px] gap-3 p-4">
+                        <NavigationMenuLink asChild>
+                          <Link to="/search" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Search Properties</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Browse all available properties with advanced filters
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/#listings" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Featured Listings</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Handpicked premium properties
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                        <NavigationMenuLink asChild>
+                          <Link to="/favorites" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Saved Properties</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              View your favorite saved listings
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
 
                   <NavigationMenuItem>
@@ -187,39 +205,31 @@ const Header = () => {
 
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                      Calculators
+                      Resources
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <div className="grid w-[400px] gap-3 p-4">
                         <NavigationMenuLink asChild>
                           <Link to="/calculators" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">All Calculators</div>
+                            <div className="text-sm font-medium leading-none">Calculators</div>
                             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Financial tools for real estate decisions
+                              Mortgage, affordability, and tax calculators
                             </p>
                           </Link>
                         </NavigationMenuLink>
                         <NavigationMenuLink asChild>
-                          <Link to="/calculators/mortgage" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Mortgage Calculator</div>
+                          <Link to="/blog" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Blog & Resources</div>
                             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Calculate monthly mortgage payments
+                              Latest market insights and expert advice
                             </p>
                           </Link>
                         </NavigationMenuLink>
                         <NavigationMenuLink asChild>
-                          <Link to="/calculators/land-transfer-tax" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Land Transfer Tax</div>
+                          <Link to="/faq" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">FAQ</div>
                             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Calculate Ontario land transfer tax
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                        <NavigationMenuLink asChild>
-                          <Link to="/calculators/affordability" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                            <div className="text-sm font-medium leading-none">Affordability Calculator</div>
-                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                              Determine how much home you can afford
+                              Frequently asked questions
                             </p>
                           </Link>
                         </NavigationMenuLink>
@@ -298,21 +308,18 @@ const Header = () => {
                 >
                   Home
                 </Link>
-                <a
-                  href="#about"
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  About
-                </a>
-                <a
-                  href="#listings"
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Listings
-                </a>
                 
+                {/* Mobile Properties submenu */}
+                <div className="space-y-1">
+                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Properties</div>
+                  <Link to="/search" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Search Properties
+                  </Link>
+                  <Link to="/favorites" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Saved Properties
+                  </Link>
+                </div>
+
                 {/* Mobile Buyers submenu */}
                 <div className="space-y-1">
                   <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Buyers</div>
@@ -347,20 +354,17 @@ const Header = () => {
                   </Link>
                 </div>
 
-                {/* Mobile Calculators submenu */}
+                {/* Mobile Resources submenu */}
                 <div className="space-y-1">
-                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Calculators</div>
+                  <div className="text-gray-700 px-3 py-2 text-base font-medium border-b">Resources</div>
                   <Link to="/calculators" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    All Calculators
+                    Calculators
                   </Link>
-                  <Link to="/calculators/mortgage" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Mortgage Calculator
+                  <Link to="/blog" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    Blog & Resources
                   </Link>
-                  <Link to="/calculators/land-transfer-tax" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Land Transfer Tax
-                  </Link>
-                  <Link to="/calculators/affordability" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
-                    Affordability Calculator
+                  <Link to="/faq" className="text-gray-600 block px-6 py-2 text-sm" onClick={() => setIsMenuOpen(false)}>
+                    FAQ
                   </Link>
                 </div>
 

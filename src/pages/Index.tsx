@@ -9,13 +9,20 @@ import PropertySearch from "@/components/PropertySearch";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import InquiryForm from "@/components/InquiryForm";
 import Footer from "@/components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    navigate('/search');
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
       <Hero />
-      <PropertySearch />
+      <PropertySearch onSearch={handleSearch} />
       <FeaturedListings />
       <DualCTA />
       <BioSection />

@@ -16,7 +16,8 @@ import {
   Bookmark,
   User,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  LogIn
 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthContext";
 import {
@@ -31,7 +32,7 @@ import { cn } from "@/lib/utils";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -190,7 +191,7 @@ const Header = () => {
                 <NavigationMenuItem>
                   <Button
                     onClick={() => navigate('/contact')}
-                    className="h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold ml-4"
+                    className="h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
                   >
                     Contact
                   </Button>
@@ -202,7 +203,7 @@ const Header = () => {
           {/* User Menu & Mobile Menu */}
           <div className="flex items-center space-x-4">
             {/* User menu for desktop */}
-            {user && (
+            {user ? (
               <div className="hidden lg:flex items-center space-x-4">
                 <Button
                   variant="outline"
@@ -212,6 +213,16 @@ const Header = () => {
                   <Bookmark className="h-4 w-4" />
                   <span>Saved</span>
                 </Button>
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate('/admin')}
+                    className="flex items-center space-x-2"
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Admin</span>
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   onClick={signOut}
@@ -219,6 +230,16 @@ const Header = () => {
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="hidden lg:flex items-center space-x-4">
+                <Button
+                  onClick={() => navigate('/auth')}
+                  className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 h-12"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span>Sign In</span>
                 </Button>
               </div>
             )}
@@ -293,6 +314,19 @@ const Header = () => {
                           <Bookmark className="h-4 w-4 mr-2" />
                           Saved Properties
                         </Button>
+                        {isAdmin && (
+                          <Button
+                            onClick={() => {
+                              navigate('/admin');
+                              setIsMobileMenuOpen(false);
+                            }}
+                            variant="outline"
+                            className="w-full justify-start"
+                          >
+                            <User className="h-4 w-4 mr-2" />
+                            Admin Dashboard
+                          </Button>
+                        )}
                         <Button
                           onClick={() => {
                             signOut();
@@ -309,13 +343,12 @@ const Header = () => {
                       <div className="space-y-2">
                         <Button
                           onClick={() => {
-                            // TODO: Open auth modal
+                            navigate('/auth');
                             setIsMobileMenuOpen(false);
                           }}
-                          variant="outline"
-                          className="w-full justify-start"
+                          className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white"
                         >
-                          <User className="h-4 w-4 mr-2" />
+                          <LogIn className="h-4 w-4 mr-2" />
                           Sign In
                         </Button>
                       </div>

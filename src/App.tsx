@@ -9,6 +9,9 @@ import { AuthProvider } from "@/components/auth/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
+// Auth Page
+import Auth from "./pages/Auth";
+
 // Calculators Pages
 import Calculators from "./pages/Calculators";
 import MortgageCalculator from "./pages/calculators/MortgageCalculator";
@@ -48,6 +51,9 @@ const App = () => (
         <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
+            
+            {/* Auth Page */}
+            <Route path="/auth" element={<Auth />} />
             
             {/* Property Pages */}
             <Route path="/property/:id" element={<PropertyDetails />} />

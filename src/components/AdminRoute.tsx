@@ -24,8 +24,9 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     );
   }
 
+  // Redirect to auth page if not authenticated
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   if (!isAdmin) {

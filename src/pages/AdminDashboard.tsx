@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 import { 
   useAdminStats, 
-  useAdminInquiries, 
-  useAdminListings,
   useAnalyticsData
 } from "@/hooks/useAdminData";
+import { useAdminInquiriesQuery } from "@/hooks/useAdminInquiries";
+import { useAdminListingsQuery } from "@/hooks/useAdminListings";
 import AdminStats from "@/components/admin/AdminStats";
 import AdminOverviewTab from "@/components/admin/AdminOverviewTab";
 import AdminListingsTab from "@/components/admin/AdminListingsTab";
@@ -26,10 +26,10 @@ import AdminAnalyticsTab from "@/components/admin/AdminAnalyticsTab";
 const AdminDashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("30");
   
-  // Fetch real data
+  // Fetch real data using the new hooks
   const { data: stats, isLoading: statsLoading, error: statsError } = useAdminStats();
-  const { data: inquiries, isLoading: inquiriesLoading, error: inquiriesError } = useAdminInquiries();
-  const { data: listings, isLoading: listingsLoading } = useAdminListings();
+  const { data: inquiries, isLoading: inquiriesLoading, error: inquiriesError } = useAdminInquiriesQuery();
+  const { data: listings, isLoading: listingsLoading } = useAdminListingsQuery();
   const { data: analyticsData, isLoading: analyticsLoading } = useAnalyticsData();
 
   const formatCurrency = (amount: number) => {
@@ -80,10 +80,6 @@ const AdminDashboard = () => {
                   <Settings className="h-4 w-4 mr-2" />
                   Settings
                 </Button>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Listing
-                </Button>
               </div>
             </div>
           </div>
@@ -130,19 +126,12 @@ const AdminDashboard = () => {
 
               {/* Listings Tab */}
               <TabsContent value="listings">
-                <AdminListingsTab 
-                  listings={listings}
-                  listingsLoading={listingsLoading}
-                  formatCurrency={formatCurrency}
-                />
+                <AdminListingsTab />
               </TabsContent>
 
               {/* Inquiries Tab */}
               <TabsContent value="inquiries">
-                <AdminInquiriesTab 
-                  inquiries={inquiries}
-                  inquiriesLoading={inquiriesLoading}
-                />
+                <AdminInquiriesTab />
               </TabsContent>
 
               {/* Content Tab */}

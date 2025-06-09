@@ -3,6 +3,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/auth/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { Database } from '@/integrations/supabase/types';
+
+type InquiryStatus = Database['public']['Enums']['inquiry_status'];
 
 export interface AdminStats {
   totalListings: number;
@@ -138,7 +141,7 @@ export const useUpdateInquiryStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: InquiryStatus }) => {
       const { data, error } = await supabase
         .from('inquiries')
         .update({ status, updated_at: new Date().toISOString() })

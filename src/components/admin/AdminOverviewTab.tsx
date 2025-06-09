@@ -14,7 +14,7 @@ import {
   LineChart,
   Line
 } from "recharts";
-import { InquiryWithListing, useUpdateInquiryStatus } from "@/hooks/useAdminData";
+import { InquiryWithListing, useUpdateInquiryStatus } from "@/hooks/useAdminInquiries";
 import { Database } from '@/integrations/supabase/types';
 import { formatDistanceToNow } from "date-fns";
 

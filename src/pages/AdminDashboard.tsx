@@ -1,55 +1,27 @@
+
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AdminRoute from "@/components/AdminRoute";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell
-} from "recharts";
 import {
-  Users,
-  Home,
-  TrendingUp,
-  Mail,
-  Eye,
-  Phone,
-  MessageSquare,
-  DollarSign,
-  Calendar,
-  Star,
   Settings,
   Plus,
-  Edit,
-  Trash2,
-  AlertCircle,
-  Loader2
+  AlertCircle
 } from "lucide-react";
 import { 
   useAdminStats, 
   useAdminInquiries, 
   useAdminListings,
-  useAnalyticsData,
-  useUpdateInquiryStatus,
-  type InquiryWithListing 
+  useAnalyticsData
 } from "@/hooks/useAdminData";
-import { Database } from '@/integrations/supabase/types';
-import { formatDistanceToNow } from "date-fns";
-
-type InquiryStatus = Database['public']['Enums']['inquiry_status'];
+import AdminStats from "@/components/admin/AdminStats";
+import AdminOverviewTab from "@/components/admin/AdminOverviewTab";
+import AdminListingsTab from "@/components/admin/AdminListingsTab";
+import AdminInquiriesTab from "@/components/admin/AdminInquiriesTab";
+import AdminAnalyticsTab from "@/components/admin/AdminAnalyticsTab";
 
 const AdminDashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("30");
@@ -59,21 +31,6 @@ const AdminDashboard = () => {
   const { data: inquiries, isLoading: inquiriesLoading, error: inquiriesError } = useAdminInquiries();
   const { data: listings, isLoading: listingsLoading } = useAdminListings();
   const { data: analyticsData, isLoading: analyticsLoading } = useAnalyticsData();
-  const updateInquiryStatus = useUpdateInquiryStatus();
-
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, string> = {
-      new: "bg-blue-100 text-blue-800",
-      contacted: "bg-yellow-100 text-yellow-800",
-      converted: "bg-green-100 text-green-800",
-      closed: "bg-gray-100 text-gray-800"
-    };
-    return variants[status] || variants.new;
-  };
-
-  const handleStatusUpdate = (inquiryId: string, newStatus: InquiryStatus) => {
-    updateInquiryStatus.mutate({ id: inquiryId, status: newStatus });
-  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-CA', {
@@ -137,103 +94,11 @@ const AdminDashboard = () => {
           <div className="max-w-7xl mx-auto px-4">
             
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Total Listings</p>
-                      {statsLoading ? (
-                        <div className="flex items-center">
-                          <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                          <span className="text-sm text-gray-500">Loading...</span>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="text-3xl font-bold text-gray-900">{stats?.totalListings || 0}</p>
-                          <p className="text-sm text-green-600">+{stats?.listingsGrowth || 0}% from last month</p>
-                        </>
-                      )}
-                    </div>
-                    <div className="bg-blue-100 p-3 rounded-full">
-                      <Home className="h-6 w-6 text-blue-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Active Inquiries</p>
-                      {statsLoading ? (
-                        <div className="flex items-center">
-                          <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                          <span className="text-sm text-gray-500">Loading...</span>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="text-3xl font-bold text-gray-900">{stats?.activeInquiries || 0}</p>
-                          <p className="text-sm text-yellow-600">{stats?.inquiriesNeedingResponse || 0} need response</p>
-                        </>
-                      )}
-                    </div>
-                    <div className="bg-yellow-100 p-3 rounded-full">
-                      <MessageSquare className="h-6 w-6 text-yellow-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Monthly Revenue</p>
-                      {statsLoading ? (
-                        <div className="flex items-center">
-                          <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                          <span className="text-sm text-gray-500">Loading...</span>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="text-3xl font-bold text-gray-900">{formatCurrency(stats?.monthlyRevenue || 0)}</p>
-                          <p className="text-sm text-green-600">+{stats?.revenueGrowth || 0}% from last month</p>
-                        </>
-                      )}
-                    </div>
-                    <div className="bg-green-100 p-3 rounded-full">
-                      <DollarSign className="h-6 w-6 text-green-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Site Visitors</p>
-                      {statsLoading ? (
-                        <div className="flex items-center">
-                          <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                          <span className="text-sm text-gray-500">Loading...</span>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="text-3xl font-bold text-gray-900">{stats?.siteVisitors?.toLocaleString() || '0'}</p>
-                          <p className="text-sm text-blue-600">+{stats?.visitorsGrowth || 0}% from last month</p>
-                        </>
-                      )}
-                    </div>
-                    <div className="bg-purple-100 p-3 rounded-full">
-                      <Eye className="h-6 w-6 text-purple-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <AdminStats 
+              stats={stats}
+              isLoading={statsLoading}
+              formatCurrency={formatCurrency}
+            />
 
             {/* Main Dashboard Tabs */}
             <Tabs defaultValue="overview" className="space-y-6">
@@ -247,297 +112,37 @@ const AdminDashboard = () => {
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="space-y-6">
-                <div className="grid lg:grid-cols-2 gap-6">
-                  {/* Sales Chart */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Monthly Sales</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {analyticsLoading ? (
-                        <div className="h-[300px] flex items-center justify-center">
-                          <Loader2 className="h-8 w-8 animate-spin" />
-                        </div>
-                      ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                          <BarChart data={analyticsData?.salesData || []}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="month" />
-                            <YAxis />
-                            <Tooltip />
-                            <Bar dataKey="sales" fill="#3B82F6" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  {/* Inquiry Trends */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Weekly Inquiries</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {analyticsLoading ? (
-                        <div className="h-[300px] flex items-center justify-center">
-                          <Loader2 className="h-8 w-8 animate-spin" />
-                        </div>
-                      ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                          <LineChart data={analyticsData?.inquiryData || []}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="day" />
-                            <YAxis />
-                            <Tooltip />
-                            <Line type="monotone" dataKey="inquiries" stroke="#10B981" strokeWidth={2} />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      )}
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Recent Inquiries */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Recent Inquiries</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {inquiriesLoading ? (
-                      <div className="flex items-center justify-center py-8">
-                        <Loader2 className="h-8 w-8 animate-spin mr-2" />
-                        <span>Loading inquiries...</span>
-                      </div>
-                    ) : inquiries && inquiries.length > 0 ? (
-                      <div className="space-y-4">
-                        {inquiries.map((inquiry: InquiryWithListing) => (
-                          <div key={inquiry.id} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div className="flex items-center space-x-4">
-                              <div className="bg-gray-100 p-2 rounded-full">
-                                <Users className="h-4 w-4 text-gray-600" />
-                              </div>
-                              <div>
-                                <p className="font-medium">{inquiry.name}</p>
-                                <p className="text-sm text-gray-600">{inquiry.email}</p>
-                                <p className="text-sm text-gray-500">
-                                  {inquiry.listings?.address || 'General inquiry'}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <Badge className={getStatusBadge(inquiry.status)}>
-                                {inquiry.status}
-                              </Badge>
-                              <span className="text-sm text-gray-500">
-                                {formatDistanceToNow(new Date(inquiry.created_at), { addSuffix: true })}
-                              </span>
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => handleStatusUpdate(inquiry.id, 'contacted' as InquiryStatus)}
-                                disabled={updateInquiryStatus.isPending}
-                              >
-                                <MessageSquare className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                        <p>No inquiries found</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <AdminOverviewTab 
+                  inquiries={inquiries}
+                  inquiriesLoading={inquiriesLoading}
+                  analyticsData={analyticsData}
+                  analyticsLoading={analyticsLoading}
+                />
               </TabsContent>
 
               {/* Analytics Tab */}
               <TabsContent value="analytics" className="space-y-6">
-                <div className="grid lg:grid-cols-2 gap-6">
-                  {/* Property Type Distribution */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Property Type Distribution</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {analyticsLoading ? (
-                        <div className="h-[300px] flex items-center justify-center">
-                          <Loader2 className="h-8 w-8 animate-spin" />
-                        </div>
-                      ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                          <PieChart>
-                            <Pie
-                              data={analyticsData?.propertyTypeData || []}
-                              cx="50%"
-                              cy="50%"
-                              labelLine={false}
-                              label={({ name, value }) => `${name} ${value}%`}
-                              outerRadius={80}
-                              fill="#8884d8"
-                              dataKey="value"
-                            >
-                              {(analyticsData?.propertyTypeData || []).map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
-                              ))}
-                            </Pie>
-                            <Tooltip />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  {/* Performance Metrics */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Performance Metrics</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span>Average Days on Market</span>
-                        <span className="font-bold">28 days</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Conversion Rate</span>
-                        <span className="font-bold">12.5%</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Average Sale Price</span>
-                        <span className="font-bold">$847K</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Client Satisfaction</span>
-                        <div className="flex items-center">
-                          <span className="font-bold mr-2">4.8</span>
-                          <div className="flex">
-                            {[1,2,3,4,5].map((star) => (
-                              <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                <AdminAnalyticsTab 
+                  analyticsData={analyticsData}
+                  analyticsLoading={analyticsLoading}
+                />
               </TabsContent>
 
               {/* Listings Tab */}
               <TabsContent value="listings">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Manage Listings</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {listingsLoading ? (
-                      <div className="flex items-center justify-center py-8">
-                        <Loader2 className="h-8 w-8 animate-spin mr-2" />
-                        <span>Loading listings...</span>
-                      </div>
-                    ) : listings && listings.length > 0 ? (
-                      <div className="space-y-4">
-                        {listings.slice(0, 10).map((listing) => (
-                          <div key={listing.id} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div>
-                              <h3 className="font-medium">{listing.title}</h3>
-                              <p className="text-sm text-gray-600">{listing.address}, {listing.city}</p>
-                              <p className="text-sm text-green-600 font-medium">
-                                {listing.price ? formatCurrency(listing.price) : 'Price on request'}
-                              </p>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Badge variant={listing.status === 'active' ? 'default' : 'secondary'}>
-                                {listing.status}
-                              </Badge>
-                              <Button variant="outline" size="sm">
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <Home className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                        <p>No listings found</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <AdminListingsTab 
+                  listings={listings}
+                  listingsLoading={listingsLoading}
+                  formatCurrency={formatCurrency}
+                />
               </TabsContent>
 
               {/* Inquiries Tab */}
               <TabsContent value="inquiries">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Manage Inquiries</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {inquiriesLoading ? (
-                      <div className="flex items-center justify-center py-8">
-                        <Loader2 className="h-8 w-8 animate-spin mr-2" />
-                        <span>Loading inquiries...</span>
-                      </div>
-                    ) : inquiries && inquiries.length > 0 ? (
-                      <div className="space-y-4">
-                        {inquiries.map((inquiry: InquiryWithListing) => (
-                          <div key={inquiry.id} className="p-4 border rounded-lg">
-                            <div className="flex items-start justify-between mb-2">
-                              <div>
-                                <h3 className="font-medium">{inquiry.name}</h3>
-                                <p className="text-sm text-gray-600">{inquiry.email}</p>
-                                {inquiry.phone && (
-                                  <p className="text-sm text-gray-600">{inquiry.phone}</p>
-                                )}
-                              </div>
-                              <Badge className={getStatusBadge(inquiry.status)}>
-                                {inquiry.status}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-gray-700 mb-2">{inquiry.message}</p>
-                            {inquiry.listings && (
-                              <p className="text-sm text-blue-600 mb-2">
-                                Property: {inquiry.listings.address}
-                              </p>
-                            )}
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs text-gray-500">
-                                {formatDistanceToNow(new Date(inquiry.created_at), { addSuffix: true })}
-                              </span>
-                              <div className="flex space-x-2">
-                                {inquiry.status === 'new' && (
-                                  <Button 
-                                    size="sm" 
-                                    onClick={() => handleStatusUpdate(inquiry.id, 'contacted' as InquiryStatus)}
-                                    disabled={updateInquiryStatus.isPending}
-                                  >
-                                    Mark Contacted
-                                  </Button>
-                                )}
-                                {inquiry.status === 'contacted' && (
-                                  <Button 
-                                    size="sm" 
-                                    onClick={() => handleStatusUpdate(inquiry.id, 'converted' as InquiryStatus)}
-                                    disabled={updateInquiryStatus.isPending}
-                                  >
-                                    Mark Converted
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                        <p>No inquiries found</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <AdminInquiriesTab 
+                  inquiries={inquiries}
+                  inquiriesLoading={inquiriesLoading}
+                />
               </TabsContent>
 
               {/* Content Tab */}

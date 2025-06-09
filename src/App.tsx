@@ -58,7 +58,7 @@ const App = () => (
             <Route path="/faq" element={<FAQ />} />
             <Route path="/blog" element={<Blog />} />
             
-            {/* Admin */}
+            {/* Admin - Now protected by AdminRoute component */}
             <Route path="/admin" element={<AdminDashboard />} />
             
             {/* Calculators Routes */}

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -47,7 +46,10 @@ import {
   useUpdateInquiryStatus,
   type InquiryWithListing 
 } from "@/hooks/useAdminData";
+import { Database } from '@/integrations/supabase/types';
 import { formatDistanceToNow } from "date-fns";
+
+type InquiryStatus = Database['public']['Enums']['inquiry_status'];
 
 const AdminDashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("30");
@@ -69,7 +71,7 @@ const AdminDashboard = () => {
     return variants[status] || variants.new;
   };
 
-  const handleStatusUpdate = (inquiryId: string, newStatus: string) => {
+  const handleStatusUpdate = (inquiryId: string, newStatus: InquiryStatus) => {
     updateInquiryStatus.mutate({ id: inquiryId, status: newStatus });
   };
 
@@ -332,7 +334,7 @@ const AdminDashboard = () => {
                               <Button 
                                 variant="outline" 
                                 size="sm"
-                                onClick={() => handleStatusUpdate(inquiry.id, 'contacted')}
+                                onClick={() => handleStatusUpdate(inquiry.id, 'contacted' as InquiryStatus)}
                                 disabled={updateInquiryStatus.isPending}
                               >
                                 <MessageSquare className="h-4 w-4" />
@@ -508,7 +510,7 @@ const AdminDashboard = () => {
                                 {inquiry.status === 'new' && (
                                   <Button 
                                     size="sm" 
-                                    onClick={() => handleStatusUpdate(inquiry.id, 'contacted')}
+                                    onClick={() => handleStatusUpdate(inquiry.id, 'contacted' as InquiryStatus)}
                                     disabled={updateInquiryStatus.isPending}
                                   >
                                     Mark Contacted
@@ -517,7 +519,7 @@ const AdminDashboard = () => {
                                 {inquiry.status === 'contacted' && (
                                   <Button 
                                     size="sm" 
-                                    onClick={() => handleStatusUpdate(inquiry.id, 'converted')}
+                                    onClick={() => handleStatusUpdate(inquiry.id, 'converted' as InquiryStatus)}
                                     disabled={updateInquiryStatus.isPending}
                                   >
                                     Mark Converted
